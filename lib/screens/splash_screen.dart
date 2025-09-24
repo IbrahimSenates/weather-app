@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/services/weather_service.dart';
 
@@ -14,9 +12,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  List<WeatherModel> _weather = [];
-  String? _city;
-
   @override
   void initState() {
     super.initState();

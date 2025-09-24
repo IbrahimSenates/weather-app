@@ -16,7 +16,6 @@ class DetailScreen extends StatelessWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final widhtScreen = constraints.maxWidth;
-          final marginHeight = constraints.maxHeight * 0.01;
           final itemHeight = constraints.maxHeight * 0.30;
           return Container(
             color: Color(0xFF2E335A),

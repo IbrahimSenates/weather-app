@@ -24,6 +24,12 @@ dependencies:
   flutter_dotenv: ^6.0.0
   lottie: ^3.3.2
   flutter_native_splash: ^2.4.6
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
 
   
 
@@ -47,5 +53,6 @@ flutter:
      - assets/images/rectAngle.png
      - assets/animations/splash_screen_animation.json  
      - assets/logos/logo.png
+     - assets/icon/icon.png
      - .env
 

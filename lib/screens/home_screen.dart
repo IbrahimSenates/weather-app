@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/screens/detail_screen.dart';
 import 'package:weather_app/screens/splash_screen.dart';
+import 'package:weather_app/widgets/bottom_hourly_info.dart';
+import 'package:weather_app/widgets/bottom_weekly_info.dart';
+import 'package:weather_app/widgets/main_info.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<WeatherModel> weatherData;
@@ -69,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fit: BoxFit.fitWidth,
             ),
           ),
-          _mainInfo(),
+          MainInfo(weatherData: _weather, city: city),
           Positioned(
             bottom: 0,
             left: 0,
@@ -85,8 +88,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          if (_showHourly) _bottomHourlyInfo(),
-          if (_showWeekly) _bottomWeeklyInfo(),
+          if (_showHourly) BottomHourlyInfo(weatherData: _weather),
+          if (_showWeekly) BottomWeeklyInfo(weatherData: _weather),
           Positioned(
             bottom: 0,
             left: 0,
@@ -165,237 +168,5 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  }
-
-  Positioned _bottomHourlyInfo() {
-    return Positioned(
-      bottom: 120,
-      left: 0,
-      right: 0,
-      child: Container(
-        height: 200,
-        child: ListView.builder(
-          padding: EdgeInsets.only(left: 10),
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemCount: 9,
-          itemBuilder: (context, index) {
-            if (index < _weather.length) {
-              final weather = _weather[index];
-              final icon = _weather[index].icon;
-              return Container(
-                width: 120,
-
-                decoration: BoxDecoration(
-                  color: const Color(0xFF48319D),
-
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30),
-                    bottom: Radius.circular(30),
-                  ),
-                ),
-                margin: EdgeInsets.only(right: 13),
-                child: ListTile(
-                  title: Text(
-                    '${weather.date.hour.toString().padLeft(2, '0')}:00 ',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  subtitle: Container(
-                    height: 160,
-
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.network(
-                          'https://openweathermap.org/img/wn/$icon@2x.png',
-                          color: _weather[index].generalStatus == 'açık'
-                              ? Colors.yellow
-                              : null,
-                        ),
-                        Text(
-                          _capitalize(weather.generalStatus),
-                          style: TextStyle(color: Colors.white70, fontSize: 18),
-                        ),
-                        Text(
-                          '${weather.degree}°C',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else {
-              return SizedBox.shrink();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  Positioned _mainInfo() {
-    return Positioned(
-      top: 98,
-      left: 0,
-      right: 0,
-      child: Container(
-        height: 183,
-        child: Column(
-          children: [
-            Text(
-              city = city.toString(),
-              style: TextStyle(
-                fontSize: 36,
-                color: Color(0xFFFFFFFF),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              _weather.isNotEmpty
-                  ? _weather[0].degree.toString() + '°C'
-                  : 'Yükleniyor',
-              style: TextStyle(
-                fontSize: 48,
-                color: Color(0xFFFFFFFF),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              _weather.isNotEmpty
-                  ? _capitalize(_weather[0].generalStatus)
-                  : 'Yükleniyor',
-              style: TextStyle(
-                fontSize: 18,
-                color: Color(0xFFEEEEEE),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _weather.isNotEmpty
-                      ? 'H:' + _weather[0].tempMax.toString() + '°'
-                      : 'Yükleniyor',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFFFFFFFF),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  _weather.isNotEmpty
-                      ? 'L:' + _weather[0].tempMin.toString() + '°'
-                      : 'Yükleniyor',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Color(0xFFFFFFFF),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Positioned _bottomWeeklyInfo() {
-    final List<WeatherModel> weeklyForecast = _weather
-        .where((weather) => weather.date.hour == 12)
-        .toList();
-
-    return Positioned(
-      bottom: 120,
-      left: 0,
-      right: 0,
-      child: Container(
-        height: 200,
-        child: ListView.builder(
-          padding: EdgeInsets.only(left: 10),
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemCount: weeklyForecast.length,
-          itemBuilder: (context, index) {
-            if (index < _weather.length) {
-              final weather = weeklyForecast[index];
-              final icon = weather.icon;
-
-              return Container(
-                width: 120,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF48319D),
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(30),
-                    bottom: Radius.circular(30),
-                  ),
-                ),
-                margin: EdgeInsets.only(right: 13),
-                child: ListTile(
-                  title: Text(
-                    getWeekdayName(weather.date.weekday),
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  subtitle: Container(
-                    height: 160,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Image.network(
-                          'https://openweathermap.org/img/wn/$icon@2x.png',
-                          color: weather.generalStatus == 'açık'
-                              ? Colors.yellow
-                              : null,
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            _capitalize(weather.generalStatus),
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '${weather.degree}°C',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            } else {
-              return SizedBox.shrink();
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  String getWeekdayName(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Pazartesi';
-      case 2:
-        return 'Salı';
-      case 3:
-        return 'Çarşamba';
-      case 4:
-        return 'Perşembe';
-      case 5:
-        return 'Cuma';
-      case 6:
-        return 'Cumartesi';
-      case 7:
-        return 'Pazar';
-      default:
-        return '';
-    }
   }
 }
