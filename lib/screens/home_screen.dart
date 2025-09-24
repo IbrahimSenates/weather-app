@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/screens/detail_screen.dart';
-import 'package:weather_app/services/weather_service.dart';
+import 'package:weather_app/screens/splash_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final List<WeatherModel> weatherData;
+  final String city;
+  const HomeScreen({super.key, required this.city, required this.weatherData});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -12,19 +14,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<WeatherModel> _weather = [];
-  var city;
+  late String city;
   bool _showHourly = true;
   bool _showWeekly = false;
-
-  void _getDataWeather() async {
-    _weather = await WeatherService().getWeatherData();
-    setState(() {});
-  }
-
-  void _getLocationData() async {
-    city = await WeatherService().getLocation();
-    setState(() {});
-  }
 
   String _capitalize(String text) {
     if (text.isEmpty) return text;
@@ -51,8 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    _getDataWeather();
-    _getLocationData();
+    _weather = widget.weatherData;
+    city = widget.city;
     super.initState();
   }
 
@@ -154,6 +146,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          Positioned(
+            bottom: 25,
+            left: 35,
+            child: GestureDetector(
+              onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => SplashScreen()),
+                (route) => false,
+              ),
+              child: Container(
+                width: 50,
+                height: 50,
+                color: Colors.transparent,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -236,11 +244,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Text(
-              city != null ? city.toString() : 'Yükleniyor...',
+              city = city.toString(),
               style: TextStyle(
-                fontSize: 32,
+                fontSize: 36,
                 color: Color(0xFFFFFFFF),
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Text(
@@ -260,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 18,
                 color: Color(0xFFEEEEEE),
-                fontWeight: FontWeight.w300,
+                fontWeight: FontWeight.w500,
               ),
             ),
             Row(
@@ -270,14 +278,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   _weather.isNotEmpty
                       ? 'H:' + _weather[0].tempMax.toString() + '°'
                       : 'Yükleniyor',
-                  style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xFFFFFFFF),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 SizedBox(width: 10),
                 Text(
                   _weather.isNotEmpty
                       ? 'L:' + _weather[0].tempMin.toString() + '°'
                       : 'Yükleniyor',
-                  style: TextStyle(fontSize: 18, color: Color(0xFFFFFFFF)),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color(0xFFFFFFFF),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),

@@ -46,6 +46,6 @@ flutter:
      - assets/images/TabBar.png
      - assets/images/rectAngle.png
      - assets/animations/splash_screen_animation.json  
-     - assets/logos/weather_logo.jpg
+     - assets/logos/logo.png
      - .env
 
