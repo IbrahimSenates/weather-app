@@ -35,7 +35,7 @@ class WeatherService {
   }
 
   Future getWeatherData() async {
-    await dotenv.load();
+    await dotenv.load(fileName: ".env");
     final String city = await getLocation();
 
     final apiKey = dotenv.env['API_KEY'];

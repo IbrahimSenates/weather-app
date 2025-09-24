@@ -31,7 +31,7 @@ class WeatherModel {
       icon: json['weather'][0]['icon'],
       humidity: (json['main']['humidity'] as num).toDouble(),
       feelsLike: (json['main']['feels_like'] as num).toDouble(),
-      wind: json['wind']['speed'],
+      wind: (json['wind']['speed'] as num).toDouble(),
     );
   }
 }
